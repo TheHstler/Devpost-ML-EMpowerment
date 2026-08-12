@@ -182,6 +182,21 @@ The mobile interface adapts the workout controls, timers, exercise information a
 
 ---
 
+## 📸 Screenshots
+
+### Build Your Session
+![GymBeat Session Builder](docs/images/session-builder.png)
+
+### Generated Workout & Soundtrack
+![GymBeat Generated Session](docs/images/generated-session.jpg)
+
+### Active Workout
+![GymBeat Active Workout](docs/images/active-workout.png)
+
+### Mobile Experience
+![GymBeat Mobile Experience](docs/images/mobile-workout.png) 
+
+
 ## 🔐 Environment Variables
 
 GymBeat requires an Anthropic API key.
@@ -190,3 +205,7 @@ Create a `.env` file in the root directory:
 
 ```env
 ANTHROPIC_API_KEY=your-api-key-here
+
+
+
+
