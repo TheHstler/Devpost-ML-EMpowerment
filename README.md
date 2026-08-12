@@ -14,7 +14,7 @@ Choose your workout. Choose your time. Choose your energy.
 
 ## 🚀 Live Demo
 
-🔗 **Try GymBeat:** [[ADD YOUR DEPLOYED LINK HERE](https://gymbeat.onrender.com/)]
+🔗 **Try GymBeat:** [[GYMBEAT LINK](https://gymbeat.onrender.com/)]
 
 > The deployed version may take a few moments to start if the server has been inactive.
 
