@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GymBeat — Workout + Soundtrack</title>
+<meta name="description" content="GymBeat builds personalised workouts and matches music to every phase of your session.">
+<meta name="theme-color" content="#080e1a">
+<meta property="og:title" content="GymBeat — Workout + Soundtrack">
+<meta property="og:description" content="GymBeat builds personalised workouts and matches music to every phase of your session.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Screen reader live region — visually hidden, announced dynamically -->
+<div id="sr-live" role="status" aria-live="polite" aria-atomic="true"
+     style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap"></div>
+
+<!-- Ambient background -->
+<div id="bg-wrap">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
+<div id="bg-grid"></div>
+<div id="particles"></div>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="logo">
+    <!-- GymBeat pulse mark: filled rounded square + white waveform -->
+    <svg class="logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GymBeat logo">
+      <defs>
+        <linearGradient id="lgGrad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop stop-color="var(--a)"/>
+          <stop offset="0.55" stop-color="var(--b)"/>
+          <stop offset="1" stop-color="var(--pink)"/>
+        </linearGradient>
+      </defs>
+      <!-- Filled bg for strong contrast at all sizes -->
+      <rect x="0" y="0" width="40" height="40" rx="10" fill="url(#lgGrad)"/>
+      <!-- Beat pulse — white so it pops on any gradient bg -->
+      <path d="M7 20h4.5l2.5-6.5 3.5 13 3-9.5 2.5 6H33"
+            stroke="white" stroke-width="2.8"
+            stroke-linecap="round" stroke-linejoin="round"
+            opacity="0.95"/>
+    </svg>
+    <div class="logo-text">GYMBEAT</div>
+  </div>
+  <div class="hdr-r">
+    <div class="ai-dot">● AI READY</div>
+    <button class="ob-help-btn" onclick="openOnboarding()" aria-label="How GymBeat works" title="How GymBeat works">?</button>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Switch GymBeat theme" title="Switch theme (Blue / Pink)">
+      <span id="themeIcon">🌸</span>
+    </button>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<div id="main">
+
+  <!-- ── HOME: configure (left) → preview (right) ── -->
+  <div class="home-layout" id="homeLayout">
+
+    <!-- LEFT — STEP 1: configure -->
+    <div class="home-left">
+      <div class="builder">
+
+        <div class="builder-top">
+          <div class="step-eyebrow"><span class="step-num">1</span> CONFIGURE</div>
+          <h1 class="builder-headline">DON'T KNOW WHAT TO DO AT THE GYM?</h1>
+          <p class="builder-sub">Pick your workout, time and energy — GymBeat builds the session and the soundtrack.</p>
+        </div>
+
+        <!-- Workout type — primary decision -->
+        <div class="blabel">WHAT ARE WE TRAINING?</div>
+        <div class="type-grid">
+          <button class="type-card" data-group="type" data-value="Upper Body" onclick="pick(this,'type')">
+            <span class="tc-icon">💪</span>
+            <span class="tc-name">Upper Body</span>
+            <span class="tc-desc">Push, pull, shoulders</span>
+          </button>
+          <button class="type-card" data-group="type" data-value="Lower Body" onclick="pick(this,'type')">
+            <span class="tc-icon">🦵</span>
+            <span class="tc-name">Lower Body</span>
+            <span class="tc-desc">Legs, glutes, core</span>
+          </button>
+          <button class="type-card" data-group="type" data-value="Full Body" onclick="pick(this,'type')">
+            <span class="tc-icon">🔥</span>
+            <span class="tc-name">Full Body</span>
+            <span class="tc-desc">Total session</span>
+          </button>
+          <button class="type-card" data-group="type" data-value="Cardio" onclick="pick(this,'type')">
+            <span class="tc-icon">🏃</span>
+            <span class="tc-name">Cardio</span>
+            <span class="tc-desc">Conditioning</span>
+          </button>
+          <button class="type-card" data-group="type" data-value="Recovery" onclick="pick(this,'type')">
+            <span class="tc-icon">🧘</span>
+            <span class="tc-name">Recovery</span>
+            <span class="tc-desc">Stretch &amp; reset</span>
+          </button>
+          <button class="type-card surprise" id="surpriseBtn" onclick="pickSurprise()">
+            <span class="tc-icon">🎲</span>
+            <span class="tc-name">Surprise Me</span>
+            <span class="tc-desc">GymBeat chooses</span>
+          </button>
+        </div>
+
+        <!-- Duration -->
+        <div class="blabel" style="margin-top:17px">HOW LONG?</div>
+        <div class="pill-row">
+          <button class="dur-pill" data-group="dur" onclick="pick(this,'dur')">20</button>
+          <button class="dur-pill" data-group="dur" onclick="pick(this,'dur')">35</button>
+          <button class="dur-pill" data-group="dur" onclick="pick(this,'dur')">45</button>
+          <button class="dur-pill" data-group="dur" onclick="pick(this,'dur')">60</button>
+          <button class="dur-pill" data-group="dur" onclick="pick(this,'dur')">90</button>
+          <input class="custom-dur-input" id="customDur" type="number" min="1" max="300"
+                 placeholder="Custom" aria-label="Custom duration in minutes" title="Enter a duration between 1 and 300 minutes" oninput="pickCustomDur(this)">
+        </div>
+
+        <!-- Energy -->
+        <div class="blabel" style="margin-top:15px">ENERGY?</div>
+        <div class="pill-row">
+          <button class="pill" data-group="energy" data-energy="Low"    onclick="pick(this,'energy')">😴 Low</button>
+          <button class="pill" data-group="energy" data-energy="Medium" onclick="pick(this,'energy')">🙂 Medium</button>
+          <button class="pill" data-group="energy" data-energy="Hyped"  onclick="pick(this,'energy')">🔥 Hyped</button>
+          <button class="pill" data-group="energy" data-energy="Angry"  onclick="pick(this,'energy')">😤 Angry</button>
+        </div>
+
+        <!-- Soundtrack / artist -->
+        <div class="music-section">
+          <div class="music-label-row">
+            <div class="blabel">🎧 SOUNDTRACK</div>
+            <span class="music-opt-tag">OPTIONAL</span>
+          </div>
+          <input class="artist-input-field" id="artistInput" type="text"
+                 placeholder="Type any artist — every song will be theirs..."
+                 aria-label="Artist for soundtrack" oninput="updatePreview()">
+          <div class="artist-chips">
+            <button class="a-chip" onclick="pickArtist(this)">Kendrick</button>
+            <button class="a-chip" onclick="pickArtist(this)">Drake</button>
+            <button class="a-chip" onclick="pickArtist(this)">Ariana Grande</button>
+            <button class="a-chip" onclick="pickArtist(this)">Travis Scott</button>
+            <button class="a-chip" onclick="pickArtist(this)">Eminem</button>
+            <button class="a-chip" onclick="pickArtist(this)">Beyoncé</button>
+            <button class="a-chip" onclick="pickArtist(this)">21 Savage</button>
+            <button class="a-chip" onclick="pickArtist(this)">Doja Cat</button>
+          </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-row">
+          <button class="lock-btn" id="lockBtn" onclick="lockIn()">🔥 LOCK ME IN</button>
+          <span class="cta-sub">Build my workout<br>+ soundtrack</span>
+        </div>
+
+        <div class="or-row">
+          <div class="or-line"></div>
+          <div class="or-text">OR TELL GYMBEAT BELOW</div>
+          <div class="or-line"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT — STEP 2: preview (informational only) -->
+    <aside class="home-right" id="homeRight" aria-live="polite">
+
+      <div class="preview-heading">
+        <span class="step-eyebrow" style="margin:0"><span class="step-num">2</span> PREVIEW</span>
+        <span class="preview-status" id="previewStatus">AWAITING CHOICES</span>
+      </div>
+
+      <!-- Hero readout -->
+      <div class="preview-summary">
+        <div class="preview-eyebrow">YOUR SESSION PREVIEW</div>
+        <div class="preview-session-name" id="previewName">YOUR SESSION</div>
+        <div class="preview-energy-line" id="previewEnergyLine">AWAITING YOUR CHOICES</div>
+        <div class="preview-tags" id="previewTags">
+          <span class="p-tag" id="previewTagType">—</span>
+          <span class="p-tag" id="previewTagDur">—</span>
+          <span class="p-tag" id="previewTagEnergy">—</span>
+        </div>
+        <div class="preview-meta-row" id="previewMeta">
+          Make your choices on the left and this preview updates instantly.
+        </div>
+      </div>
+
+      <!-- Session journey -->
+      <div>
+        <div class="preview-label" style="margin-bottom:13px">SESSION STRUCTURE</div>
+        <div class="phase-previews" id="phasePreviews">
+          <div class="phase-preview-card" style="--phase-color:var(--amber)">
+            <div class="phase-preview-inner">
+              <div class="phase-preview-head">
+                <span class="phase-preview-name">WARM UP</span>
+                <span class="phase-preview-dur" id="prevDurWarm">~5–10 min</span>
+              </div>
+              <div class="phase-preview-desc" id="prevDescWarm">Mobility, activation &amp; light cardio to prime your body</div>
+            </div>
+          </div>
+          <div class="phase-preview-card" style="--phase-color:var(--pink)">
+            <div class="phase-preview-inner">
+              <div class="phase-preview-head">
+                <span class="phase-preview-name">MAIN WORK</span>
+                <span class="phase-preview-dur" id="prevDurMain">~20–40 min</span>
+              </div>
+              <div class="phase-preview-desc" id="prevDescMain">Compound movements &amp; targeted exercises for your goal</div>
+            </div>
+          </div>
+          <div class="phase-preview-card" style="--phase-color:var(--green)">
+            <div class="phase-preview-inner">
+              <div class="phase-preview-head">
+                <span class="phase-preview-name">COOL DOWN</span>
+                <span class="phase-preview-dur" id="prevDurCool">~5–7 min</span>
+              </div>
+              <div class="phase-preview-desc" id="prevDescCool">Stretching &amp; recovery to close out the session</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Soundtrack preview -->
+      <div class="music-preview-card">
+        <div class="music-preview-header">
+          <span class="music-preview-title">🎧 SOUNDTRACK PREVIEW</span>
+          <div class="equalizer" id="equalizer" aria-hidden="true"></div>
+        </div>
+        <div class="music-preview-body" id="prevMusicDesc">
+          GymBeat will pick a soundtrack that shifts with every phase of your workout.
+        </div>
+        <div class="music-preview-artists" id="prevMusicArtists"></div>
+        <div class="music-meta-row">
+          <div class="music-meta-item">
+            <span class="mm-label">BPM RANGE</span>
+            <span class="mm-value" id="prevBpm">Auto</span>
+          </div>
+          <div class="music-meta-item">
+            <span class="mm-label">ENERGY</span>
+            <span class="mm-value energy-flames" id="prevFlames">🔥🔥🔥</span>
+          </div>
+          <div class="music-meta-item" style="margin-left:auto">
+            <span class="mm-label">MATCHED TO</span>
+            <span class="mm-value" style="font-size:12px">Your workout phases</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick start -->
+      <div class="quick-start-wrap">
+        <div class="preview-label" style="margin-bottom:9px">OR TRY ONE OF THESE</div>
+        <div class="preview-quick-chips">
+          <button class="q-chip" onclick="quickSend('Leg day 45 mins, feeling hyped')">Leg day · 45 min · hyped</button>
+          <button class="q-chip" onclick="quickSend('Full body HIIT 30 mins, high energy')">Full body HIIT · 30 min</button>
+          <button class="q-chip" onclick="quickSend('Recovery workout 20 mins, tired')">Recovery · 20 min · tired</button>
+          <button class="q-chip" onclick="quickSend('Upper body 30 mins, medium energy')">Upper body · 30 min</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ── GENERATING ── -->
+  <div id="generatingScreen" aria-busy="true" aria-label="Building your session" role="status">
+    <div class="gen-bg-pulse"></div>
+    <div class="gen-title" id="genTitle">BUILDING YOUR SESSION</div>
+    <div class="gen-steps">
+      <div class="gen-step" data-status="pending">
+        <div class="step-icon">○</div>
+        <span class="step-label">Reading your selections</span>
+      </div>
+      <div class="gen-step" data-status="pending">
+        <div class="step-icon">○</div>
+        <span class="step-label">Choosing your workout type &amp; structure</span>
+      </div>
+      <div class="gen-step" data-status="pending">
+        <div class="step-icon">○</div>
+        <span class="step-label">Building your exercise blocks</span>
+      </div>
+      <div class="gen-step" data-status="pending">
+        <div class="step-icon">○</div>
+        <span class="step-label">Matching your soundtrack</span>
+      </div>
+    </div>
+    <div class="gen-sub" id="genSub">Hang tight while GymBeat assembles your workout and finds your soundtrack.</div>
+  </div>
+
+  <!-- ── ACTIVE WORKOUT SCREEN ── -->
+  <div id="workoutScreen" style="display:none">
+
+    <!-- Header -->
+    <div class="wo-header">
+      <div class="wo-header-left">
+        <div class="wo-session-label" id="wo-session-label">GYMBEAT</div>
+        <div class="wo-progress-row">
+          <div class="wo-progress-bar-track"><div class="wo-progress-bar-fill" id="wo-progress-bar"></div></div>
+          <span class="wo-progress-text" id="wo-progress-text">0 / 0 EXERCISES</span>
+        </div>
+      </div>
+      <div class="wo-header-right">
+        <button class="wo-pause-btn" id="wo-pause-btn" onclick="togglePause()">⏸ PAUSE</button>
+        <button class="wo-end-btn"   onclick="confirmEndSession()">✕ END</button>
+      </div>
+    </div>
+
+    <!-- Main layout -->
+    <div class="wo-body">
+
+      <!-- LEFT: workout area -->
+      <div class="wo-workout-col">
+
+        <!-- Phase badge -->
+        <div class="wo-phase-row">
+          <div class="wo-phase-dot" id="wo-phase-dot"></div>
+          <span class="wo-phase-name" id="wo-phase-name">WARM-UP</span>
+        </div>
+
+        <!-- Current exercise hero -->
+        <div class="wo-exercise-hero">
+          <div class="wo-ex-num-large" id="wo-ex-num">01</div>
+          <h1 class="wo-ex-name-large" id="wo-ex-name">Exercise</h1>
+          <p  class="wo-ex-detail-large" id="wo-ex-detail"></p>
+        </div>
+
+        <!-- Exercise visual placeholder -->
+        <div class="wo-visual">
+          <div class="wo-visual-inner" id="wo-visual-inner">
+            <div class="wo-visual-icon" aria-hidden="true">🏋️</div>
+            <span class="wo-visual-hint">Exercise illustration</span>
+          </div>
+        </div>
+
+        <!-- Timer (timed exercises) -->
+        <div class="wo-timer-area" id="wo-timer-area" style="display:none">
+          <div class="wo-timer-display" id="wo-timer-display">00:30</div>
+          <div class="wo-timer-controls">
+            <button class="wo-ctrl-sm" onclick="resetTimer()" aria-label="Restart timer">↺ Reset</button>
+          </div>
+        </div>
+
+        <!-- Sets tracker (rep exercises) -->
+        <div class="wo-sets-area" id="wo-sets-area" style="display:none">
+          <div class="wo-sets-label" id="wo-sets-label">3 sets × 10 reps</div>
+          <div class="wo-sets-dots" id="wo-sets-dots"></div>
+          <button class="wo-ctrl-sm" onclick="completeSet()" aria-label="Complete set">✓ Complete Set</button>
+        </div>
+
+        <!-- Navigation controls -->
+        <div class="wo-controls">
+          <button class="wo-ctrl-prev" onclick="previousExercise()" aria-label="Previous exercise">← Prev</button>
+          <button class="wo-ctrl-next" id="wo-next-btn" onclick="advanceExercise()" aria-label="Next exercise">
+            Next →
+          </button>
+        </div>
+
+        <!-- Up next -->
+        <div class="wo-next" id="wo-next">
+          <span class="wo-next-label">UP NEXT</span>
+          <div class="wo-next-body">
+            <span class="wo-next-name"   id="wo-next-name"></span>
+            <span class="wo-next-detail" id="wo-next-detail"></span>
+            <span class="wo-next-phase"  id="wo-next-phase"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: music + progress -->
+      <div class="wo-music-col">
+        <div class="wo-music-panel" id="wo-music-panel">
+          <div class="wo-music-heading">
+            <span class="wo-music-label">NOW PLAYING</span>
+            <span class="wo-music-phase-tag" id="wo-track-phase">WARM-UP</span>
+          </div>
+
+          <div class="wo-track-main">
+            <div class="wo-track-title"  id="wo-track-title">Track Title</div>
+            <div class="wo-track-artist" id="wo-track-artist">Artist</div>
+          </div>
+
+          <div class="wo-track-meta">
+            <span class="wo-track-genre" id="wo-track-genre"></span>
+            <span class="wo-track-bpm"   id="wo-track-bpm"></span>
+          </div>
+
+          <!-- Animated equalizer -->
+          <div class="wo-eq" aria-hidden="true" id="wo-eq"></div>
+
+          <button class="wo-open-track" id="wo-open-track" onclick="openSoundtrack(this)"
+                  type="button" aria-label="Open soundtrack in music app">
+            ▶ Start Soundtrack on Spotify
+          </button>
+
+          <!-- Session mini-map -->
+          <div class="wo-minimap-wrap">
+            <span class="wo-minimap-label">SESSION MAP</span>
+            <div class="wo-minimap" id="wo-minimap" aria-label="All exercises in this session"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Paused overlay -->
+    <div class="wo-paused-overlay" id="wo-paused-overlay" style="display:none">
+      <div class="wo-paused-card">
+        <div class="wo-paused-title">SESSION PAUSED</div>
+        <button class="wo-resume-btn" onclick="togglePause()">▶ RESUME</button>
+        <button class="secondary-btn" onclick="confirmEndSession()">End Session</button>
+      </div>
+    </div>
+
+    <!-- End confirm modal -->
+    <div class="wo-end-confirm" id="wo-end-confirm" style="display:none"
+         role="dialog" aria-modal="true" aria-labelledby="wo-end-title">
+      <div class="wo-paused-card">
+        <div class="wo-paused-title" id="wo-end-title">END WORKOUT?</div>
+        <p class="wo-modal-body">You can always build another session.</p>
+        <button class="wo-resume-btn" onclick="cancelEndSession()">KEEP TRAINING</button>
+        <button class="wo-end-destructive" onclick="endSession()">End Session</button>
+      </div>
+    </div>
+
+    <!-- Completion screen -->
+    <div class="wo-complete" id="wo-complete" style="display:none">
+      <div class="wo-complete-inner">
+        <div class="wo-complete-emoji">🔥</div>
+        <div class="wo-complete-title">SESSION COMPLETE</div>
+        <div class="wo-complete-stats"></div>
+        <p class="wo-complete-sub">You did the work. That's what matters.</p>
+        <button class="rs-start-btn" onclick="doneWorkout()" style="margin-bottom:10px">DONE</button>
+        <button class="secondary-btn" onclick="buildAnotherSession()">↺ Build Another Session</button>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ── RESULTS ── -->
+  <div id="results" style="display:none"></div>
+
+</div>
+
+<!-- ══ CHAT INPUT ══ -->
+<div class="input-area" id="globalInputArea">
+  <label for="userInput" class="input-hint" style="display:block;cursor:text">Prefer to type? Tell GymBeat what you need — "45 mins leg day, tired"</label>
+  <div class="input-row">
+    <textarea id="userInput" rows="1"
+              placeholder="I have 45 minutes and want a hard leg session..."
+              onkeydown="handleKey(event)" oninput="autoResize(this)"
+              aria-label="Tell GymBeat what workout you want"></textarea>
+    <button id="sendBtn" onclick="sendMessage()" aria-label="Send message">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="22" y1="2" x2="11" y2="13"/>
+        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+  <!-- ══ ONBOARDING OVERLAY ══ -->
+  <div id="ob-overlay" class="ob-overlay ob-hidden" role="dialog" aria-modal="true"
+       aria-label="GymBeat onboarding tutorial" tabindex="-1">
+    <div class="ob-card">
+
+      <!-- Slides -->
+      <div class="ob-slides">
+
+        <!-- SLIDE 0: Welcome -->
+        <div class="ob-slide ob-single" data-slide="0">
+          <div class="ob-text" style="max-width:480px;margin:0 auto;padding:40px 32px 24px">
+            <div class="ob-eyebrow">WELCOME</div>
+            <h2 class="ob-heading">MEET GYMBEAT</h2>
+            <p class="ob-copy">
+              <em>Your workout and your soundtrack, built together.</em><br><br>
+              Pick how you want to train and GymBeat creates the session and the music to match.
+            </p>
+            <div class="ob-welcome-visual" style="margin:20px auto 0">
+              <div class="ob-welcome-logo">
+                <div class="ob-welcome-logo-mark">
+                  <svg viewBox="0 0 40 40" fill="none" width="30" height="30" aria-hidden="true">
+                    <path d="M7 20h4.5l2.5-6.5 3.5 13 3-9.5 2.5 6H33"
+                          stroke="white" stroke-width="2.8"
+                          stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+                  </svg>
+                </div>
+                <div class="ob-welcome-wordmark">GYMBEAT</div>
+              </div>
+              <div class="ob-welcome-tagline">The gym app that handles your workout <em>and</em> your music.</div>
+              <div class="ob-welcome-pills">
+                <span class="ob-welcome-pill">💪 Build your workout</span>
+                <span class="ob-welcome-pill">🎧 Match your music</span>
+                <span class="ob-welcome-pill">🔥 Train</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 1: Build your session -->
+        <div class="ob-slide" data-slide="1">
+          <div class="ob-text">
+            <div class="ob-eyebrow">01 · CONFIGURE</div>
+            <h2 class="ob-heading">BUILD IT YOUR WAY</h2>
+            <p class="ob-copy">Choose your workout, time and energy. Your session preview updates live as you go.</p>
+            <div class="ob-callout-group" style="margin-top:8px">
+              <div class="ob-callout"><div class="ob-callout-num">1</div><span class="ob-callout-label">Pick your workout type</span></div>
+              <div class="ob-callout"><div class="ob-callout-num">2</div><span class="ob-callout-label">Choose your duration</span></div>
+              <div class="ob-callout"><div class="ob-callout-num">3</div><span class="ob-callout-label">Set your energy level</span></div>
+            </div>
+          </div>
+          <div class="ob-visual">
+            <div class="ob-builder-mini">
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-bottom:4px">WHAT ARE WE TRAINING?</div>
+              <div class="ob-type-mini">
+                <div class="ob-type-card-mini ob-selected"><span>💪</span>Upper Body</div>
+                <div class="ob-type-card-mini"><span>🦵</span>Lower Body</div>
+                <div class="ob-type-card-mini"><span>🔥</span>Full Body</div>
+                <div class="ob-type-card-mini"><span>🏃</span>Cardio</div>
+                <div class="ob-type-card-mini"><span>🧘</span>Recovery</div>
+                <div class="ob-type-card-mini"><span>🎲</span>Surprise</div>
+              </div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-bottom:4px;margin-top:8px">HOW LONG?</div>
+              <div class="ob-dur-mini">
+                <div class="ob-dur-pill-mini">20</div>
+                <div class="ob-dur-pill-mini ob-selected">45</div>
+                <div class="ob-dur-pill-mini">60</div>
+                <div class="ob-dur-pill-mini">90</div>
+              </div>
+              <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted);margin-bottom:4px;margin-top:8px">ENERGY?</div>
+              <div class="ob-energy-mini">
+                <div class="ob-dur-pill-mini">😴 Low</div>
+                <div class="ob-dur-pill-mini ob-selected">🔥 Hyped</div>
+                <div class="ob-dur-pill-mini">😤 Angry</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: Music matching -->
+        <div class="ob-slide" data-slide="2">
+          <div class="ob-text">
+            <div class="ob-eyebrow">02 · SOUNDTRACK</div>
+            <h2 class="ob-heading">YOUR SOUNDTRACK MOVES WITH YOU</h2>
+            <p class="ob-copy">GymBeat matches music energy to every phase — gentle for warm-up, maximum for the main set.</p>
+            <p class="ob-copy" style="margin-top:8px">Got an artist in mind? Type their name and GymBeat builds the whole soundtrack around them.</p>
+          </div>
+          <div class="ob-visual">
+            <div class="ob-phase-demo">
+              <div class="ob-pd-phase" style="--pc:var(--amber)">
+                <div class="ob-pd-name">WARM UP</div>
+                <div class="ob-pd-bpm">95–115 BPM</div>
+                <div class="ob-pd-flames">🔥🔥</div>
+              </div>
+              <div style="text-align:center;font-size:18px;color:var(--muted)">↓</div>
+              <div class="ob-pd-phase" style="--pc:var(--pink)">
+                <div class="ob-pd-name">MAIN SET</div>
+                <div class="ob-pd-bpm">145–170 BPM</div>
+                <div class="ob-pd-flames">🔥🔥🔥🔥🔥</div>
+              </div>
+              <div style="text-align:center;font-size:18px;color:var(--muted)">↓</div>
+              <div class="ob-pd-phase" style="--pc:var(--green)">
+                <div class="ob-pd-name">COOL DOWN</div>
+                <div class="ob-pd-bpm">60–75 BPM</div>
+                <div class="ob-pd-flames">🔥</div>
+              </div>
+              <div class="ob-eq" style="margin-top:8px" aria-hidden="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Surprise Me -->
+        <div class="ob-slide" data-slide="3">
+          <div class="ob-text">
+            <div class="ob-eyebrow">03 · SURPRISE</div>
+            <h2 class="ob-heading">CAN'T BE BOTHERED TO CHOOSE?</h2>
+            <div class="ob-subheading">🎲 SURPRISE ME</div>
+            <p class="ob-copy">Give GymBeat control and it will choose the workout type, structure, intensity and soundtrack for you.</p>
+          </div>
+          <div class="ob-visual">
+            <div class="ob-surprise-demo">
+              <div class="ob-surprise-card">
+                <div class="ob-surprise-icon">🎲</div>
+                <div class="ob-surprise-title">SURPRISE ME</div>
+                <div class="ob-surprise-checks">
+                  <div class="ob-check-row"><span class="ob-check-icon">✓</span>Workout type chosen</div>
+                  <div class="ob-check-row"><span class="ob-check-icon">✓</span>Exercises chosen</div>
+                  <div class="ob-check-row"><span class="ob-check-icon">✓</span>Intensity chosen</div>
+                  <div class="ob-check-row"><span class="ob-check-icon">✓</span>Soundtrack chosen</div>
+                </div>
+                <div class="ob-you-train">YOU JUST TRAIN.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: Natural language -->
+        <div class="ob-slide" data-slide="4">
+          <div class="ob-text">
+            <div class="ob-eyebrow">04 · JUST ASK</div>
+            <h2 class="ob-heading">OR JUST SAY WHAT YOU NEED</h2>
+            <p class="ob-copy">Don't want to tap through the options? Tell GymBeat what kind of session you want — in plain language.</p>
+          </div>
+          <div class="ob-visual">
+            <div class="ob-input-demo">
+              <div class="ob-input-mock">"I have 45 minutes, I'm tired, but I still want to train legs."</div>
+              <div class="ob-flow-row">
+                <span class="ob-flow-step">Your request</span>
+                <span class="ob-flow-arrow">→</span>
+                <span class="ob-flow-step">GymBeat understands</span>
+                <span class="ob-flow-arrow">→</span>
+                <span class="ob-flow-step">Session built</span>
+              </div>
+              <div class="ob-pd-phase" style="--pc:var(--a);margin-top:4px">
+                <div style="font-size:10px;font-weight:800;color:var(--muted);letter-spacing:1.5px">CONFIGURED FROM YOUR MESSAGE</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px">
+                  <span style="font-size:11px;font-weight:700;color:var(--sub)">Lower Body</span>
+                  <span style="font-size:11px;color:var(--muted)">·</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--sub)">45 mins</span>
+                  <span style="font-size:11px;color:var(--muted)">·</span>
+                  <span style="font-size:11px;font-weight:700;color:var(--sub)">Low energy</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5: Themes -->
+        <div class="ob-slide" data-slide="5">
+          <div class="ob-text">
+            <div class="ob-eyebrow">05 · YOUR VIBE</div>
+            <h2 class="ob-heading">CHOOSE YOUR VIBE</h2>
+            <p class="ob-copy">Switch GymBeat's look anytime. Both themes have the same workout + music features.</p>
+            <div class="ob-theme-callout" style="margin-top:8px">
+              <span class="ob-arrow-indicator" aria-hidden="true">→</span>
+              <span class="ob-callout-hint">Switch themes anytime from the button in the top-right corner.</span>
+            </div>
+          </div>
+          <div class="ob-visual">
+            <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:280px">
+              <div class="ob-theme-demo">
+                <div class="ob-theme-card ob-dark-theme">
+                  <div class="ob-theme-name">BLUE</div>
+                  <div class="ob-theme-desc">Electric · focused · cool</div>
+                  <div class="ob-theme-swatch"></div>
+                </div>
+                <div class="ob-theme-card ob-pink-theme">
+                  <div class="ob-theme-name">PINK</div>
+                  <div class="ob-theme-desc">Bold · energetic · expressive</div>
+                  <div class="ob-theme-swatch"></div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:12px">
+                <span style="font-size:11px;color:var(--muted);font-weight:600">Switch theme here</span>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:13px">?</div>
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--a);display:flex;align-items:center;justify-content:center;font-size:13px;box-shadow:0 0 10px var(--glow-a)">🌸</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 6: Final -->
+        <div class="ob-slide ob-single" data-slide="6">
+          <div class="ob-text" style="max-width:480px;margin:0 auto;padding:36px 32px 24px">
+            <h2 class="ob-heading" style="font-size:48px">YOU'RE READY 🔥</h2>
+            <p class="ob-copy" style="margin-top:8px">
+              Pick your session. Let GymBeat handle the workout + soundtrack.
+            </p>
+            <div class="ob-complete-demo" style="margin:20px auto 0">
+              <div class="ob-demo-row">
+                <div class="ob-demo-tile">
+                  <div class="ob-demo-tile-label">WORKOUT</div>
+                  <span style="font-size:18px">💪 Upper Body</span>
+                  <div class="ob-dur-pill-mini ob-selected" style="width:fit-content">45 MIN</div>
+                </div>
+                <div class="ob-demo-tile" style="background:color-mix(in srgb,var(--b) 8%,var(--surface2));border-color:color-mix(in srgb,var(--b) 30%,var(--border))">
+                  <div class="ob-demo-tile-label">SOUNDTRACK</div>
+                  <div class="ob-eq" aria-hidden="true" style="height:22px"></div>
+                  <span style="font-size:11px;color:var(--b)">AI-matched phases</span>
+                </div>
+              </div>
+              <div class="ob-demo-cta">🔥 START SESSION</div>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-top:12px;text-align:center">
+              Replay this tutorial anytime using the <strong style="color:var(--sub)">?</strong> button in the header.
+            </p>
+          </div>
+        </div>
+
+      </div><!-- /ob-slides -->
+
+      <!-- Footer -->
+      <div class="ob-footer">
+        <div class="ob-progress-dots" role="tablist" aria-label="Tutorial progress">
+          <button class="ob-dot ob-dot-active" onclick="obGoTo(0)" aria-label="Slide 1" aria-current="step" role="tab"></button>
+          <button class="ob-dot" onclick="obGoTo(1)" aria-label="Slide 2" role="tab"></button>
+          <button class="ob-dot" onclick="obGoTo(2)" aria-label="Slide 3" role="tab"></button>
+          <button class="ob-dot" onclick="obGoTo(3)" aria-label="Slide 4" role="tab"></button>
+          <button class="ob-dot" onclick="obGoTo(4)" aria-label="Slide 5" role="tab"></button>
+          <button class="ob-dot" onclick="obGoTo(5)" aria-label="Slide 6" role="tab"></button>
+          <button class="ob-dot" onclick="obGoTo(6)" aria-label="Final slide" role="tab"></button>
+        </div>
+        <div class="ob-controls">
+          <button class="ob-btn-skip" onclick="skipOnboarding()" aria-label="Skip tutorial">Skip</button>
+          <button class="ob-btn-back" id="ob-back" onclick="obBack()" aria-label="Previous slide" disabled>← Back</button>
+          <button class="ob-btn-next" id="ob-next" onclick="obNext()" aria-label="Next slide">Next →</button>
+          <button class="ob-btn-start" id="ob-start" onclick="closeOnboarding()" style="display:none" aria-label="Start using GymBeat">START USING GYMBEAT →</button>
+        </div>
+      </div>
+
+    </div><!-- /ob-card -->
+  </div><!-- /ob-overlay -->
+
+
+<script src="app.js"></script>
+</body>
+</html>
