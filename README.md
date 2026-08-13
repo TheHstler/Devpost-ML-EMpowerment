@@ -202,6 +202,9 @@ The mobile interface adapts the workout controls, timers, exercise information a
 
 ### Mobile Experience
 
+<p align="center">
+  <img src="ML%20empowerment%20Demo/Docs/images/mobile-workout.PNG" alt="GymBeat Mobile Experience" width="300"> 
+</p>
 
 
 
