@@ -185,16 +185,16 @@ The mobile interface adapts the workout controls, timers, exercise information a
 ## 📸 Screenshots
 
 ### Build Your Session
-![GymBeat Session Builder](Docs/images/session-builder.png)
+![GymBeat Session Builder](Docs/images/session-builder.jpg)
 
 ### Generated Workout & Soundtrack
-![GymBeat Generated Session](Docs/images/generated-session.jpg)
+![GymBeat Generated Session](Docs/images/generated-session.png)
 
 ### Active Workout
 ![GymBeat Active Workout](Docs/images/active-workout.png)
 
 ### Mobile Experience
-![GymBeat Mobile Experience](Docs/images/mobile-workout.png) 
+![GymBeat Mobile Experience](Docs/images/mobile-workout.PNG)
 
 
 ## 🔐 Environment Variables
